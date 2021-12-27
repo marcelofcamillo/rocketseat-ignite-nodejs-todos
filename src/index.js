@@ -62,6 +62,13 @@ app.post('/todos', checkExistsUserAccount, (req, res) => {
   return res.status(201).json(todo);
 });
 
+// should be able to list all user's todos
+app.get('/todos', checkExistsUserAccount, (req, res) => {
+  const { user } = req;
+
+  return res.json(user.todos);
+});
+
 app.listen(3000, () => {
   console.log('API started!');
 });
