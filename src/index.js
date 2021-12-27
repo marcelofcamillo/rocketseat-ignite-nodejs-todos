@@ -69,6 +69,25 @@ app.get('/todos', checkExistsUserAccount, (req, res) => {
   return res.json(user.todos);
 });
 
+// should be able to update a todo
+app.put('/todos/:id', checkExistsUserAccount, (req, res) => {
+  const { user } = req;
+  const { title, deadline } = req.body;
+  const { id } = req.params;
+
+  const todo = user.todos.find((todo) => todo.id === id);
+
+  // should not be able to update a non existing todo
+  if (!todo) {
+    return res.status(404).json({ error: 'Todo not found!' });
+  }
+
+  todo.title = title;
+  todo.deadline = new Date(deadline);
+
+  return res.json(todo);
+});
+
 app.listen(3000, () => {
   console.log('API started!');
 });
