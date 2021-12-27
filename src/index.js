@@ -6,13 +6,28 @@ app.use(express.json());
 
 const users = [];
 
+// middleware
+function checkExistsUserAccount(req, res, next) {
+  const { username } = req.headers;
+
+  const user = users.find((user) => user.username === username);
+
+  // should not be able to create a new user when username already exists
+  if (!user) {
+    return res.status(404).json({ error: 'User not found!' });
+  }
+
+  req.user = user;
+
+  return next();
+}
+
 // should be able to create a new user
 app.post('/users', (req, res) => {
   const { name, username } = req.body;
 
   const userExists = users.find((user) => user.username === username);
 
-  // should not be able to create a new user when username already exists
   if (userExists) {
     return res.status(400).json({ error: 'User already exists!' });
   }
