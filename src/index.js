@@ -88,6 +88,23 @@ app.put('/todos/:id', checkExistsUserAccount, (req, res) => {
   return res.json(todo);
 });
 
+// should be able to mark a todo as done
+app.patch('/todos/:id/done', (req, res) => {
+  const { user } = req;
+  const { id } = req.params;
+
+  const todo = user.todos.find((todo) => todo.id === id);
+
+  // should not be able to mark a non existing todo as done
+  if (!todo) {
+    return res.status(404).json({ error: 'Todo not found!' });
+  }
+
+  todo.done = true;
+
+  return res.json(todo);
+});
+
 app.listen(3000, () => {
   console.log('API started!');
 });
