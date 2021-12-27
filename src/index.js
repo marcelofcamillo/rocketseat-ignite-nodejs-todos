@@ -44,6 +44,24 @@ app.post('/users', (req, res) => {
   res.status(201).json(user);
 });
 
+// should be able to create a new todo
+app.post('/todos', checkExistsUserAccount, (req, res) => {
+  const { user } = req;
+  const { title, deadline } = req.body;
+
+  const todo = {
+    id: uuidv4(),
+    title,
+    done: false,
+    deadline: new Date(deadline),
+    created_at: new Date(),
+  };
+
+  user.todos.push(todo);
+
+  return res.status(201).json(todo);
+});
+
 app.listen(3000, () => {
   console.log('API started!');
 });
