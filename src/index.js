@@ -105,6 +105,22 @@ app.patch('/todos/:id/done', (req, res) => {
   return res.json(todo);
 });
 
+app.delete('todos/:id', (req, res) => {
+  const { user } = req;
+  const { id } = req.params;
+
+  const todoIndex = user.todos.findIndex((todo) => todo.id === id);
+
+  // should not be able to delete an existing todo
+  if (todoIndex === -1) {
+    return res.status(401).json({ error: 'Todo not found!' });
+  }
+
+  user.todos.splice(todoIndex, 1);
+
+  return res.status(204).json();
+});
+
 app.listen(3000, () => {
   console.log('API started!');
 });
